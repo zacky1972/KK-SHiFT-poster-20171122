@@ -1,0 +1,30 @@
+{
+  "name": "kk-shift-poster-20171122",
+  "version": "1.0.0",
+  "description": "Poster for KK-Shift",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zacky1972/KK-Shift-poster-20171122.git"
+  },
+  "author": "Susumu Yamazaki",
+  "bugs": {
+    "url": "https://github.com/zacky1972/KK-Shift-poster-20171122/issues"
+  },
+  "homepage": "https://github.com/zacky1972/KK-Shift-poster-20171122#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.13",
+    "coffee-script": "^1.12.7",
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sass": "^3.1.0",
+    "gulp-slim": "^0.3.0"
+  },
+  "dependencies": {
+    "coffeescript": "^2.0.2"
+  }
+}
