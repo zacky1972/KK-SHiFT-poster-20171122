@@ -10,3 +10,8 @@ $ npm -g install gulp
 $ npm install
 ```
 
+# ローカルサーバーへの表示
+
+```
+$ gulp serve
+```
