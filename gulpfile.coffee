@@ -19,18 +19,28 @@ build = {
 	manifest: 'dist/rev-manifest.json',
 }
 
-gulp.task 'build:slim', ['build:sass'], ->
-	manifest = gulp.src(build.manifest)
+gulp.task 'build:slim', ->
 	gulp.src(sources.path + '**/*.slim')
 		.pipe(plumber())
 		.pipe(slim({
 			pretty: true,
 		}))
-		.pipe(revReplace({manifest: manifest}))
 		.pipe(gulp.dest(build.path))
 
 gulp.task 'watch:slim', ->
-	gulp.watch(['*.slim'], ['build:slim'])
+	gulp.watch([sources.path + '**/*.slim'], ['build:slim', 'rev-replace:html'])
+
+gulp.task 'build:html', ->
+	gulp.src(sources.path + '**/*.html')
+		.pipe(plumber())
+		.pipe(gulp.dest(build.path))
+
+gulp.task 'rev-replace:html', ['build:html', 'build:slim', 'build:sass'], ->
+	manifest = gulp.src(build.manifest)
+	gulp.src(build.path + '**/*.html')
+		.pipe(plumber())
+		.pipe(revReplace({manifest: manifest}))
+		.pipe(gulp.dest(build.path))
 
 gulp.task 'build:sass', ->
 	gulp.src(sources.path + '**/*.scss', ['sass'])
@@ -46,7 +56,7 @@ gulp.task 'build:sass', ->
 		.pipe(gulp.dest(build.path))
 
 gulp.task 'watch:sass', ->
-	gulp.watch(['*.scss'], ['build:sass'])
+	gulp.watch([sources.path + '**/*.scss'], ['build:sass', 'rev-replace:html'])
 
 gulp.task 'connect', ->
 	connect.server({
@@ -65,7 +75,7 @@ gulp.task 'sync:reload', ->
 	sync.reload()
 
 gulp.task 'watch:sync', ->
-	gulp.watch('*.{html,css}', ['sync:reload'])
+	gulp.watch(build.path + '**/*.{html,css}', ['sync:reload'])
 
 gulp.task 'gh-pages', ['build'], ->
 	gulp.src(build.path + '**/*')
