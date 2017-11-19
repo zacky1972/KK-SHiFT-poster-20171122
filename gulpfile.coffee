@@ -20,6 +20,13 @@ build = {
 	manifest: 'dist/rev-manifest.json',
 }
 
+gulp.task 'build:images', ->
+	return gulp.src("#{sources.path}/assets/images/*")
+		.pipe(gulp.dest("#{build.path}/assets/images/"))
+
+gulp.task 'watch:images', ->
+	gulp.watch("#{sources.path}/assets/images/*", ['build:images'])
+
 gulp.task 'build:slim', ->
 	return gulp.src("#{sources.path}/**/*.slim")
 		.pipe(plumber())
@@ -100,12 +107,12 @@ gulp.task 'gh-pages', ['build'], ->
 gulp.task 'clean', (cb) ->
 	return del(["#{build.path}/*"], cb)
 
-gulp.task 'build:non-rev', ['build:sass', 'build:css', 'build:html', 'build:slim']
+gulp.task 'build:non-rev', ['build:sass', 'build:css', 'build:html', 'build:slim', 'build:images']
 
 gulp.task 'build', ['build:non-rev'], ->
 	return sequence 'rev', 'rev-replace'
 
-gulp.task 'watch', ['watch:slim', 'watch:html', 'watch:sass', 'watch:css', 'watch:sync']
+gulp.task 'watch', ['watch:slim', 'watch:html', 'watch:sass', 'watch:css', 'watch:images', 'watch:sync']
 
 gulp.task 'serve', ->
 	sequence 'clean', 'build', 'connect', 'watch', 'sync'
