@@ -1,5 +1,6 @@
 gulp = require 'gulp'
 del = require 'del'
+sequence = require 'run-sequence'
 plumber = require 'gulp-plumber'
 slim = require 'gulp-slim'
 sass = require 'gulp-sass'
@@ -11,83 +12,103 @@ rev = require 'gulp-rev'
 revReplace = require 'gulp-rev-replace'
 
 sources = {
-	path: 'sources/',
+	path: './sources',
 }
 
 build = {
-	path: 'dist/',
+	path: './dist',
 	manifest: 'dist/rev-manifest.json',
 }
 
 gulp.task 'build:slim', ->
-	gulp.src(sources.path + '**/*.slim')
+	return gulp.src("#{sources.path}/**/*.slim")
 		.pipe(plumber())
 		.pipe(slim({
 			pretty: true,
 		}))
-		.pipe(gulp.dest(build.path))
+		.pipe(gulp.dest("#{build.path}/"))
 
 gulp.task 'watch:slim', ->
-	gulp.watch([sources.path + '**/*.slim'], ['build:slim', 'rev-replace:html'])
+	gulp.watch("#{sources.path}/**/*.slim", ['build:slim'])
 
 gulp.task 'build:html', ->
-	gulp.src(sources.path + '**/*.html')
+	return gulp.src("#{sources.path}/**/*.html")
 		.pipe(plumber())
-		.pipe(gulp.dest(build.path))
+		.pipe(gulp.dest("#{build.path}/"))
 
-gulp.task 'rev-replace:html', ['build:html', 'build:slim', 'build:sass'], ->
+gulp.task 'watch:html', ->
+	gulp.watch("#{sources.path}/**/*.html", ['build:html'])
+
+gulp.task 'rev-replace', ['rev'], ->
 	manifest = gulp.src(build.manifest)
-	gulp.src(build.path + '**/*.html')
+	return gulp.src("#{build.path}/**/*.+(html|css|js)")
 		.pipe(plumber())
 		.pipe(revReplace({manifest: manifest}))
-		.pipe(gulp.dest(build.path))
+		.pipe(gulp.dest("#{build.path}/"))
 
 gulp.task 'build:sass', ->
-	gulp.src(sources.path + '**/*.scss', ['sass'])
+	return gulp.src("#{sources.path}/assets/**/*.scss", ['sass'])
 		.pipe(plumber())
 		.pipe(sass({
 			outputStyle: 'expanded',
 			sourcemap: true,
 		}))
-		.pipe(rev())
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(build.path))
-		.pipe(rev.manifest())
-		.pipe(gulp.dest(build.path))
+		.pipe(gulp.dest("#{build.path}/assets/"))
 
 gulp.task 'watch:sass', ->
-	gulp.watch([sources.path + '**/*.scss'], ['build:sass', 'rev-replace:html'])
+	gulp.watch("#{sources.path}/assets/**/*.scss", ['build:sass'])
+
+gulp.task 'build:css', ->
+	return gulp.src("#{sources.path}/assets/**/*.css")
+		.pipe(plumber())
+		.pipe(gulp.dest("#{build.path}/assets/"))
+
+gulp.task 'watch:css', ->
+	gulp.watch("#{sources.path}/assets/**/*.css", ['build:css'])
+
+gulp.task 'rev', ->
+	return gulp.src("#{build.path}/assets/**/*.+(js|css|png|gif|jpg|jpeg|svg|woff|ico)")
+		.pipe(rev())
+		.pipe(gulp.dest("#{build.path}/assets/"))
+		.pipe(rev.manifest())
+		.pipe(gulp.dest("#{build.path}/assets/"))
 
 gulp.task 'connect', ->
-	connect.server({
-		root: build.path,
+	return connect.server({
+		root: "#{build.path}/",
 		livereload: true,
 	})
 
 gulp.task 'sync', ->
-	sync({
+	return sync({
 		server: {
-			baseDir: build.path,
+			baseDir: "#{build.path}/",
 		}
 	})
 
 gulp.task 'sync:reload', ->
-	sync.reload()
+	return sync.reload()
 
 gulp.task 'watch:sync', ->
-	gulp.watch(build.path + '**/*.{html,css}', ['sync:reload'])
+	gulp.watch(["#{build.path}/**/*.html", "#{build.path}/**/*.css"], ['sync:reload', 'rev-replace'])
 
 gulp.task 'gh-pages', ['build'], ->
-	gulp.src(build.path + '**/*')
+	return gulp.src("#{build.path}/**/*")
 		.pipe(ghPages())
 
 gulp.task 'clean', (cb) ->
-	del(["#{build.path}/*"], cb)
+	return del(["#{build.path}/*"], cb)
 
-gulp.task 'build', ['clean', 'build:sass', 'build:slim']
+gulp.task 'build:non-rev', ['build:sass', 'build:css', 'build:html', 'build:slim']
 
-gulp.task 'watch', ['watch:slim', 'watch:sass', 'watch:sync']
+gulp.task 'build', ['build:non-rev'], ->
+	return sequence 'rev', 'rev-replace'
 
-gulp.task 'serve', ['connect', 'watch', 'sync']
+gulp.task 'watch', ['watch:slim', 'watch:html', 'watch:sass', 'watch:css', 'watch:sync']
 
-gulp.task 'deploy', ['build', 'gh-pages']
+gulp.task 'serve', ->
+	sequence 'clean', 'build', 'connect', 'watch', 'sync'
+
+gulp.task 'deploy', ->
+	sequence 'clean', 'build', 'gh-pages'
