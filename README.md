@@ -15,3 +15,12 @@ $ npm install
 ```
 $ gulp serve
 ```
+
+# GitHub Pages へのデプロイ
+
+```
+$ gulp deploy
+```
+
+しばらくしてから，[このページを開きます。](https://zacky1972.github.io/KK-Shift-poster-20171122/)
+
