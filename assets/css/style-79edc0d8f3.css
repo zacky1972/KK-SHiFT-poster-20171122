@@ -32,12 +32,13 @@ body {
 
 .contents {
   height: 100%;
-  margin: 30px;
+  margin: 30px auto;
   width: 100%;
 }
 
 .center {
   text-align: center;
+  width: 100%;
 }
 
 .title-zone {
