@@ -11,30 +11,59 @@ $accent-color: #FADF4B;
 $background-color: $base-color;
 $text-color: #202020;
 
-$paper-width: 210mm;
-$paper-height: 297mm;
-
 $border-width: 30px;
 
 @page {
-	size: $paper-width $paper-height;
-	margin: 0;
+	size: A4;
+	margin: 6.35mm 4.85mm;
+}
+
+// 第一引数で基準となる画面幅のフォントサイズ、第二引数で基準となる画面幅を入力
+@function get_vw($size, $viewport:1024) {
+  $rate: 100 / $viewport;
+  @return $rate * $size * 1vw;
+}
+
+// 第一引数で基準となる画面幅のフォントサイズ、第二引数で基準となる画面幅を入力
+@mixin font-size_vw($font_size:10, $viewport:1024) {
+  font-size: $font_size * 1px;
+  font-size: get_vw($font_size, $viewport);
+}
+
+@function size_px($size) {
+	@return $size * 1px;
+}
+
+@mixin c_margin_vw($margin_size, $viewport:1024) {
+	height: calc(100% - #{size_px($margin_size * 2)});
+	height: calc(100% - #{get_vw($margin_size * 2)});
+	margin: $margin_size * 1px;
+	margin: get_vw($margin_size);
+	width: calc(100% - #{size_px($margin_size * 2)});
+	width: calc(100% - #{get_vw($margin_size * 2)});
 }
 
 body {
 	background-color: $main-color;
 	font-family: 'Noto Sans Japanese';
 	color: $text-color;
+  @include font-size_vw(12);
 }
 
-.page-background {
-	margin: 6.35mm 4.85mm;
+h1 {
+	@include font-size_vw(48);
+}
+
+h2 {
+	@include font-size_vw(36);
+}
+
+h3 {
+	@include font-size_vw(24);
 }
 
 .page {
-	background-color: $background-color;
-	height: $paper-height;
-	width: $paper-width;
+	margin: 0 auto;
 }
 
 .frame {
@@ -45,9 +74,7 @@ body {
 }
 
 .contents {
-	height: 100%;
-	margin: 30px auto;
-	width: 100%;
+	@include c_margin_vw(30);
 }
 
 .center {
@@ -58,4 +85,27 @@ body {
 .title-zone {
 	background-color: $main-color;
 	color: $accent-color;
+}
+
+.content-zone {
+	background-color: $background-color;
+	color: $text-color;
+}
+
+.twin-triangle {
+	background-image: linear-gradient(150deg, $accent-color get_vw(50), transparent 0),
+	linear-gradient(-30deg, $accent-color get_vw(50), transparent 0);
+	height: 100%;
+	width: 100%;
+}
+
+.col-6 {
+	display: inline-block;
+	height: 100%;
+	width: 49%;
+}
+
+img {
+	width: 100%;
+	height: auto;
 }
