@@ -4,6 +4,15 @@ slim = require 'gulp-slim'
 sass = require 'gulp-sass'
 connect = require 'gulp-connect'
 sync = require 'browser-sync'
+ghPages = require 'gulp-gh-pages'
+
+dist = {
+	path: 'dist/',
+	sources: [
+		'./index.html',
+		'./style.css',
+	],
+}
 
 gulp.task 'build:slim', ->
 	gulp.src('*.slim')
@@ -46,8 +55,18 @@ gulp.task 'sync:reload', ->
 gulp.task 'watch:sync', ->
 	gulp.watch('*.{html,css}', ['sync:reload'])
 
+gulp.task 'dist', ->
+	gulp.src(dist.sources)
+		.pipe(gulp.dest(dist.path))
+
+gulp.task 'gh-pages', ->
+	gulp.src(dist.path + '**/*')
+		.pipe(ghPages())
+
 gulp.task 'build', ['build:slim', 'build:sass']
 
 gulp.task 'watch', ['watch:slim', 'watch:sass', 'watch:sync']
 
 gulp.task 'serve', ['connect', 'watch', 'sync']
+
+gulp.task 'deploy', ['build', 'dist', 'gh-pages']
