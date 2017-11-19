@@ -18,6 +18,7 @@ gulp.task 'watch:slim', ->
 
 gulp.task 'build:sass', ->
 	gulp.src('*.scss', ['sass'])
+		.pipe(plumber())
 		.pipe(sass({
 			outputStyle: 'expanded',
 		}))
