@@ -100,7 +100,7 @@ gulp.task 'sync:reload', ->
 gulp.task 'watch:sync', ->
 	gulp.watch(["#{build.path}/**/*.html", "#{build.path}/**/*.css"], ['sync:reload', 'rev-replace'])
 
-gulp.task 'gh-pages', ['build'], ->
+gulp.task 'gh-pages', ->
 	return gulp.src("#{build.path}/**/*")
 		.pipe(ghPages())
 
