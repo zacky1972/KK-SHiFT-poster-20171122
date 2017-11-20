@@ -62,6 +62,11 @@ h3 {
 	@include font-size_vw(24);
 }
 
+h4 {
+	@include font-size_vw(20);
+}
+
+
 .page {
 	margin: 0 auto;
 }
@@ -102,10 +107,26 @@ h3 {
 .col-6 {
 	display: inline-block;
 	height: 100%;
+	vertical-align: middle;
 	width: 49%;
+}
+
+.col-4 {
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+	width: 32%;
 }
 
 img {
 	width: 100%;
 	height: auto;
+}
+
+span.underline {
+	border-bottom: solid get_vw(3) $main-color;
+}
+
+.min-margin {
+	margin: 0;
 }
