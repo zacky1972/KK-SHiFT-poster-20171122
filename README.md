@@ -1,4 +1,4 @@
-# KK-Shift ポスター(20171122 広域技術マッチングフェア)
+# KK-SHiFT ポスター(20171122 広域技術マッチングフェア)
 
 Chrome でA2版で印刷した時に合わせて作成しています。
 
@@ -22,5 +22,5 @@ $ gulp serve
 $ gulp deploy
 ```
 
-しばらくしてから，[このページを開きます。](https://zacky1972.github.io/KK-Shift-poster-20171122/)
+しばらくしてから，[このページを開きます。](https://zacky1972.github.io/KK-SHiFT-poster-20171122/)
 
