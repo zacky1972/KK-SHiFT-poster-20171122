@@ -30,6 +30,11 @@ h3 {
   font-size: 2.34375vw;
 }
 
+h4 {
+  font-size: 20px;
+  font-size: 1.95312vw;
+}
+
 .page {
   margin: 0 auto;
 }
@@ -74,10 +79,26 @@ h3 {
 .col-6 {
   display: inline-block;
   height: 100%;
+  vertical-align: middle;
   width: 49%;
+}
+
+.col-4 {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  width: 32%;
 }
 
 img {
   width: 100%;
   height: auto;
+}
+
+span.underline {
+  border-bottom: solid 0.29297vw #4BBDAB;
+}
+
+.min-margin {
+  margin: 0;
 }
